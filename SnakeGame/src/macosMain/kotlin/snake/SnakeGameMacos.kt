@@ -1,7 +1,30 @@
 package snake
 
-fun main() {
+import platform.darwin.box
+import platform.darwin.delwin
+import platform.darwin.endwin
+import platform.darwin.initscr
+import platform.darwin.mvwprintw
+import platform.darwin.newwin
+import platform.darwin.wgetch
+import platform.darwin.wrefresh
 
+val windowWidth = 20
+val windowHeight = 10
+
+fun main() {
+    initscr()
+
+    val window = newwin(windowHeight, windowWidth, 0, 0)
+    box(window, 0, 0)
+    mvwprintw(window, 3, 2, "ooooQ")
+    wrefresh(window)
+
+    wgetch(window)
+    wgetch(window)
+
+    delwin(window)
+    endwin()
 }
 
 data class Snake(val cells: List<Cell>, val direction: Direction) {
