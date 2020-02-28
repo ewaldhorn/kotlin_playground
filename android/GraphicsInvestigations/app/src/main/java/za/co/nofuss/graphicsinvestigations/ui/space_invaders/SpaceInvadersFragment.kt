@@ -1,4 +1,4 @@
-package za.co.nofuss.graphicsinvestigations.ui.gallery
+package za.co.nofuss.graphicsinvestigations.ui.space_invaders
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,20 +10,20 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import za.co.nofuss.graphicsinvestigations.R
 
-class GalleryFragment : Fragment() {
+class SpaceInvadersFragment : Fragment() {
 
-    private lateinit var galleryViewModel: GalleryViewModel
+    private lateinit var spaceInvadersViewModel: SpaceInvadersViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        galleryViewModel =
-            ViewModelProviders.of(this).get(GalleryViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_gallery, container, false)
+        spaceInvadersViewModel =
+            ViewModelProviders.of(this).get(SpaceInvadersViewModel::class.java)
+        val root = inflater.inflate(R.layout.fragment_space_invaders, container, false)
         val textView: TextView = root.findViewById(R.id.text_gallery)
-        galleryViewModel.text.observe(viewLifecycleOwner, Observer {
+        spaceInvadersViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
         return root

@@ -30,10 +30,10 @@
     </fragment>
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="za.co.nofuss.graphicsinvestigations.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        android:id="@+id/nav_space_invaders"
+        android:name="za.co.nofuss.graphicsinvestigations.ui.space_invaders.SpaceInvadersFragment"
+        android:label="@string/menu_space_invaders"
+        tools:layout="@layout/fragment_space_invaders" />
 
     <fragment
         android:id="@+id/nav_slideshow"
