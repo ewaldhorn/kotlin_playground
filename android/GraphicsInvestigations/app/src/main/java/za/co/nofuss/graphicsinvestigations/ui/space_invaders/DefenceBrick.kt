@@ -8,7 +8,7 @@ class DefenceBrick(row: Int, column: Int, shelterNumber: Int, screenX: Int, scre
     var isVisible = true
 
     private val width = screenX / 180
-    private val height = screenY / 80
+    private val height = screenY / 120
 
     // Sometimes a bullet slips through this padding.
     // Set padding to zero if this annoys you
@@ -21,9 +21,9 @@ class DefenceBrick(row: Int, column: Int, shelterNumber: Int, screenX: Int, scre
     val position = RectF(column * width + brickPadding +
         shelterPadding * shelterNumber +
         shelterPadding + shelterPadding * shelterNumber,
-        row * height + brickPadding + startHeight,
+        row * height + brickPadding + startHeight - 140,
         column * width + width - brickPadding +
             shelterPadding * shelterNumber +
             shelterPadding + shelterPadding * shelterNumber,
-        row * height + height - brickPadding + startHeight)
+        row * height + height - brickPadding + startHeight - 140)
 }

@@ -20,9 +20,9 @@ class PlayerShip(context: Context, private val screenX: Int, private val screenY
     // This keeps track of where the ship is
     val position = RectF(
         screenX / 2f,
-        screenY - height - 50,
+        screenY - height - 200,
         screenX / 2 + width,
-        screenY.toFloat()
+        screenY.toFloat() - 120.0f
     )
 
     // This will hold the pixels per second speed that the ship will move

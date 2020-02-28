@@ -1,10 +1,12 @@
 package za.co.nofuss.graphicsinvestigations.ui.space_invaders
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Point
+import android.graphics.RectF
 import android.util.Log
 import android.view.MotionEvent
 import android.view.SurfaceView
@@ -13,6 +15,7 @@ class SpaceInvadersView(context: Context, private val size: Point) : SurfaceView
     Runnable {
 
     private val gameThread = Thread(this)
+
     // A boolean which we will set and unset
     private var playing = false
 
@@ -53,14 +56,24 @@ class SpaceInvadersView(context: Context, private val size: Point) : SurfaceView
     // Lives
     private var lives = 3
 
-    private var highScore = 0
+    // To remember the high score
+    private val prefs: SharedPreferences = context.getSharedPreferences(
+        "Kotlin Invaders",
+        Context.MODE_PRIVATE)
+
+    private var highScore =  prefs.getInt("highScore", 0)
+
     // How menacing should the sound be?
     private var menaceInterval: Long = 1000
 
     // Which menace sound should play next
     private var uhOrOh: Boolean = false
+
     // When did we last play a menacing sound
     private var lastMenaceTime = System.currentTimeMillis()
+
+    // For making a noise
+    private val soundPlayer = SoundPlayer(context)
 
     private fun prepareLevel() {
         // Here we will initialize the game objects
@@ -70,11 +83,15 @@ class SpaceInvadersView(context: Context, private val size: Point) : SurfaceView
         numInvaders = 0
         for (column in 0..10) {
             for (row in 0..5) {
-                invaders.add(Invader(context,
-                    row,
-                    column,
-                    size.x,
-                    size.y))
+                invaders.add(
+                    Invader(
+                        context,
+                        row,
+                        column,
+                        size.x,
+                        size.y
+                    )
+                )
 
                 numInvaders++
             }
@@ -85,11 +102,15 @@ class SpaceInvadersView(context: Context, private val size: Point) : SurfaceView
         for (shelterNumber in 0..4) {
             for (column in 0..18) {
                 for (row in 0..8) {
-                    bricks.add(DefenceBrick(row,
-                        column,
-                        shelterNumber,
-                        size.x,
-                        size.y))
+                    bricks.add(
+                        DefenceBrick(
+                            row,
+                            column,
+                            shelterNumber,
+                            size.x,
+                            size.y
+                        )
+                    )
 
                     numBricks++
                 }
@@ -124,6 +145,10 @@ class SpaceInvadersView(context: Context, private val size: Point) : SurfaceView
             if (timeThisFrame >= 1) {
                 fps = 1000 / timeThisFrame
             }
+
+            // Play a sound based on the menace level
+            if (!paused && ((startFrameTime - lastMenaceTime) > menaceInterval))
+                menacePlayer()
         }
     }
 
@@ -144,13 +169,44 @@ class SpaceInvadersView(context: Context, private val size: Point) : SurfaceView
                 // Move the next invader
                 invader.update(fps)
 
+                // Does he want to take a shot?
+                if (invader.takeAim(
+                        playerShip.position.left,
+                        playerShip.width,
+                        waves
+                    )
+                ) {
+
+                    // If so try and spawn a bullet
+                    if (invadersBullets[nextBullet].shoot(
+                            invader.position.left
+                                + invader.width / 2,
+                            invader.position.top, playerBullet.down
+                        )
+                    ) {
+
+                        // Shot fired
+                        // Prepare for the next shot
+                        nextBullet++
+
+                        // Loop back to the first one if we have reached the last
+                        if (nextBullet == maxInvaderBullets) {
+                            // This stops the firing of bullet
+                            // until one completes its journey
+                            // Because if bullet 0 is still active
+                            // shoot returns false.
+                            nextBullet = 0
+                        }
+                    }
+                }
+
                 // If that move caused them to bump
                 // the screen change bumped to true
                 if (invader.position.left > size.x - invader.width
-                    || invader.position.left < 0) {
+                    || invader.position.left < 0
+                ) {
 
                     bumped = true
-
                 }
             }
         }
@@ -179,6 +235,120 @@ class SpaceInvadersView(context: Context, private val size: Point) : SurfaceView
                 }
             }
         }
+
+        // Has the player's playerBullet
+        // hit the top of the screen
+        if (playerBullet.position.bottom < 0) {
+            playerBullet.isActive = false
+        }
+
+        // Has an invaders playerBullet
+        // hit the bottom of the screen
+        for (bullet in invadersBullets) {
+            if (bullet.position.top > size.y) {
+                bullet.isActive = false
+            }
+        }
+
+        // Has the player's playerBullet hit an invader
+        if (playerBullet.isActive) {
+            for (invader in invaders) {
+                if (invader.isVisible) {
+                    if (RectF.intersects(
+                            playerBullet.position,
+                            invader.position
+                        )
+                    ) {
+                        invader.isVisible = false
+
+                        soundPlayer.playSound(
+                            SoundPlayer.invaderExplodeID
+                        )
+
+                        playerBullet.isActive = false
+                        Invader.numberOfInvaders--
+                        score += 10
+                        if (score > highScore) {
+                            highScore = score
+                        }
+
+                        // Has the player cleared the level
+                        //if (score == numInvaders * 10 * waves) {
+                        if (Invader.numberOfInvaders == 0) {
+                            paused = true
+                            lives++
+                            invaders.clear()
+                            bricks.clear()
+                            invadersBullets.clear()
+                            prepareLevel()
+                            waves++
+                            break
+                        }
+
+                        // Don't check any more invaders
+                        break
+                    }
+                }
+            }
+        }
+
+// Has an alien playerBullet hit a shelter brick
+        for (bullet in invadersBullets) {
+            if (bullet.isActive) {
+                for (brick in bricks) {
+                    if (brick.isVisible) {
+                        if (RectF.intersects(bullet.position, brick.position)) {
+                            // A collision has occurred
+                            bullet.isActive = false
+                            brick.isVisible = false
+                            soundPlayer.playSound(SoundPlayer.damageShelterID)
+                        }
+                    }
+                }
+            }
+        }
+
+        // Has a player playerBullet hit a shelter brick
+        if (playerBullet.isActive) {
+            for (brick in bricks) {
+                if (brick.isVisible) {
+                    if (RectF.intersects(playerBullet.position, brick.position)) {
+                        // A collision has occurred
+                        playerBullet.isActive = false
+                        brick.isVisible = false
+                        soundPlayer.playSound(SoundPlayer.damageShelterID)
+                    }
+                }
+            }
+        }
+
+        // Has an invader playerBullet hit the player ship
+        for (bullet in invadersBullets) {
+            if (bullet.isActive) {
+                if (RectF.intersects(playerShip.position, bullet.position)) {
+                    bullet.isActive = false
+                    lives--
+                    soundPlayer.playSound(SoundPlayer.playerExplodeID)
+
+                    // Is it game over?
+                    if (lives == 0) {
+                        lost = true
+                        break
+                    }
+                }
+            }
+        }
+
+        if (lost) {
+            paused = true
+            lives = 3
+            score = 0
+            waves = 1
+            invaders.clear()
+            bricks.clear()
+            invadersBullets.clear()
+            prepareLevel()
+        }
     }
 
     private fun draw() {
@@ -195,21 +365,30 @@ class SpaceInvadersView(context: Context, private val size: Point) : SurfaceView
 
             // Draw all the game objects here
             // Now draw the player spaceship
-            canvas.drawBitmap(playerShip.bitmap, playerShip.position.left, playerShip.position.top, paint)
+            canvas.drawBitmap(
+                playerShip.bitmap,
+                playerShip.position.left,
+                playerShip.position.top,
+                paint
+            )
 
             // Draw the invaders
             for (invader in invaders) {
                 if (invader.isVisible) {
                     if (uhOrOh) {
-                        canvas.drawBitmap(Invader.bitmap1,
+                        canvas.drawBitmap(
+                            Invader.bitmap1,
                             invader.position.left,
                             invader.position.top,
-                            paint)
+                            paint
+                        )
                     } else {
-                        canvas.drawBitmap(Invader.bitmap2,
+                        canvas.drawBitmap(
+                            Invader.bitmap2,
                             invader.position.left,
                             invader.position.top,
-                            paint)
+                            paint
+                        )
                     }
                 }
             }
@@ -256,6 +435,21 @@ class SpaceInvadersView(context: Context, private val size: Point) : SurfaceView
         } catch (e: InterruptedException) {
             Log.e("Error:", "joining thread")
         }
+
+        val prefs = context.getSharedPreferences(
+            "Kotlin Invaders",
+            Context.MODE_PRIVATE)
+
+        val oldHighScore = prefs.getInt("highScore", 0)
+
+        if(highScore > oldHighScore) {
+            val editor = prefs.edit()
+
+            editor.putInt(
+                "highScore", highScore)
+
+            editor.apply()
+        }
     }
 
     // If SpaceInvadersActivity is started then
@@ -269,7 +463,63 @@ class SpaceInvadersView(context: Context, private val size: Point) : SurfaceView
     // The SurfaceView class implements onTouchListener
     // So we can override this method and detect screen touches.
     override fun onTouchEvent(motionEvent: MotionEvent): Boolean {
+        when (motionEvent.action and MotionEvent.ACTION_MASK) {
 
+            // Player has touched the screen
+            // Or moved their finger while touching screen
+            MotionEvent.ACTION_POINTER_DOWN,
+            MotionEvent.ACTION_DOWN,
+            MotionEvent.ACTION_MOVE -> {
+                paused = false
+Log.d(">>>>", "MotionEventY is ${motionEvent.y} and the math is ${size.y - size.y / 2}")
+                if (motionEvent.y > size.y - size.y / 2) {
+                    if (motionEvent.x > size.x / 4) {
+                        playerShip.moving = PlayerShip.right
+                    } else {
+                        playerShip.moving = PlayerShip.left
+                    }
+                }
+
+                if (motionEvent.y < size.y - size.y / 2) {
+                    // Shots fired
+                    if (playerBullet.shoot(
+                            playerShip.position.left + playerShip.width / 2f,
+                            playerShip.position.top,
+                            playerBullet.up
+                        )
+                    ) {
+
+                        soundPlayer.playSound(SoundPlayer.shootID)
+                    }
+                }
+            }
+
+            // Player has removed finger from screen
+            MotionEvent.ACTION_POINTER_UP,
+            MotionEvent.ACTION_UP -> {
+                // if (motionEvent.y > size.y - size.y / 2) {
+                    playerShip.moving = PlayerShip.stopped
+                // }
+            }
+
+        }
         return true
+    }
+
+    private fun menacePlayer() {
+        if (uhOrOh) {
+            // Play Uh
+            soundPlayer.playSound(SoundPlayer.uhID)
+
+        } else {
+            // Play Oh
+            soundPlayer.playSound(SoundPlayer.ohID)
+        }
+
+        // Reset the last menace time
+        lastMenaceTime = System.currentTimeMillis()
+        // Alter value of uhOrOh
+        uhOrOh = !uhOrOh
+
     }
 }
