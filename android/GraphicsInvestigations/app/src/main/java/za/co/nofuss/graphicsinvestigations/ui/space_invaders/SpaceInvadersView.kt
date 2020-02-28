@@ -23,6 +23,13 @@ class SpaceInvadersView(context: Context, private val size: Point) : SurfaceView
     private var canvas: Canvas = Canvas()
     private val paint: Paint = Paint()
 
+    // The players ship
+    private var playerShip: PlayerShip = PlayerShip(context, size.x, size.y)
+
+    // Some Invaders
+    private val invaders = ArrayList<Invader>()
+    private var numInvaders = 0
+
     // The score
     private var score = 0
 
@@ -43,6 +50,21 @@ class SpaceInvadersView(context: Context, private val size: Point) : SurfaceView
 
     private fun prepareLevel() {
         // Here we will initialize the game objects
+        // Here we will initialize the game objects
+        // Build an army of invaders
+        Invader.numberOfInvaders = 0
+        numInvaders = 0
+        for (column in 0..10) {
+            for (row in 0..5) {
+                invaders.add(Invader(context,
+                    row,
+                    column,
+                    size.x,
+                    size.y))
+
+                numInvaders++
+            }
+        }
     }
 
     override fun run() {
@@ -72,6 +94,44 @@ class SpaceInvadersView(context: Context, private val size: Point) : SurfaceView
 
     private fun update(fps: Long) {
         // Update the state of all the game objects
+        playerShip.update(fps)
+
+// Did an invader bump into the side of the screen
+        var bumped = false
+
+        // Has the player lost
+        var lost = false
+
+        // Update all the invaders if visible
+        for (invader in invaders) {
+
+            if (invader.isVisible) {
+                // Move the next invader
+                invader.update(fps)
+
+                // If that move caused them to bump
+                // the screen change bumped to true
+                if (invader.position.left > size.x - invader.width
+                    || invader.position.left < 0) {
+
+                    bumped = true
+
+                }
+            }
+        }
+
+        // Did an invader bump into the edge of the screen
+        if (bumped) {
+
+            // Move all the invaders down and change direction
+            for (invader in invaders) {
+                invader.dropDownAndReverse(waves)
+                // Have the invaders landed
+                if (invader.position.bottom >= size.y && invader.isVisible) {
+                    lost = true;
+                }
+            }
+        }
     }
 
     private fun draw() {
@@ -87,6 +147,26 @@ class SpaceInvadersView(context: Context, private val size: Point) : SurfaceView
             paint.color = Color.argb(255, 0, 255, 0)
 
             // Draw all the game objects here
+            // Now draw the player spaceship
+            canvas.drawBitmap(playerShip.bitmap, playerShip.position.left, playerShip.position.top, paint)
+
+            // Draw the invaders
+            for (invader in invaders) {
+                if (invader.isVisible) {
+                    if (uhOrOh) {
+                        canvas.drawBitmap(Invader.bitmap1,
+                            invader.position.left,
+                            invader.position.top,
+                            paint)
+                    } else {
+                        canvas.drawBitmap(Invader.bitmap2,
+                            invader.position.left,
+                            invader.position.top,
+                            paint)
+                    }
+                }
+            }
+
 
             // Draw the score and remaining lives
             // Change the brush color
