@@ -91,7 +91,7 @@ class SpaceInvadersView(context: Context, private val size: Point) : SurfaceView
             // Draw the score and remaining lives
             // Change the brush color
             paint.color = Color.argb(255, 255, 255, 255)
-            paint.textSize = 70f
+            paint.textSize = 40f
             canvas.drawText(
                 "Score: $score   Lives: $lives Wave: " +
                     "$waves HI: $highScore", 20f, 75f, paint
