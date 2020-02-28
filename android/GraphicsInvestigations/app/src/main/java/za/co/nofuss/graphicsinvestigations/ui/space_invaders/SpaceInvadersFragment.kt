@@ -1,5 +1,6 @@
 package za.co.nofuss.graphicsinvestigations.ui.space_invaders
 
+import android.graphics.Point
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import za.co.nofuss.graphicsinvestigations.R
 class SpaceInvadersFragment : Fragment() {
 
     private lateinit var spaceInvadersViewModel: SpaceInvadersViewModel
+    private var spaceInvadersView: SpaceInvadersView? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,6 +28,21 @@ class SpaceInvadersFragment : Fragment() {
         spaceInvadersViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
-        return root
+        val size = Point()
+        val display = parentFragment?.activity?.windowManager?.defaultDisplay?.getSize(size)
+
+        spaceInvadersView = SpaceInvadersView(requireContext(), size)
+        return spaceInvadersView
+        // return root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        spaceInvadersView?.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        spaceInvadersView?.onPause()
     }
 }
