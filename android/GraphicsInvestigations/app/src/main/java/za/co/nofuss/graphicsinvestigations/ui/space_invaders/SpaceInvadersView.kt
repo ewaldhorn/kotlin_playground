@@ -30,6 +30,20 @@ class SpaceInvadersView(context: Context, private val size: Point) : SurfaceView
     private val invaders = ArrayList<Invader>()
     private var numInvaders = 0
 
+    // The player's shelters are built from bricks
+    private val bricks = ArrayList<DefenceBrick>()
+    private var numBricks: Int = 0
+
+    // The player's playerBullet
+    // much faster and half the length
+    // compared to invader's bullet
+    private var playerBullet = Bullet(size.y, 1200f, 40f)
+
+    // The invaders bullets
+    private val invadersBullets = ArrayList<Bullet>()
+    private var nextBullet = 0
+    private val maxInvaderBullets = 10
+
     // The score
     private var score = 0
 
@@ -65,6 +79,27 @@ class SpaceInvadersView(context: Context, private val size: Point) : SurfaceView
                 numInvaders++
             }
         }
+
+        // Build the shelters
+        numBricks = 0
+        for (shelterNumber in 0..4) {
+            for (column in 0..18) {
+                for (row in 0..8) {
+                    bricks.add(DefenceBrick(row,
+                        column,
+                        shelterNumber,
+                        size.x,
+                        size.y))
+
+                    numBricks++
+                }
+            }
+        }
+
+        // Initialize the invadersBullets array
+        for (i in 0 until maxInvaderBullets) {
+            invadersBullets.add(Bullet(size.y))
+        }
     }
 
     override fun run() {
@@ -96,7 +131,7 @@ class SpaceInvadersView(context: Context, private val size: Point) : SurfaceView
         // Update the state of all the game objects
         playerShip.update(fps)
 
-// Did an invader bump into the side of the screen
+        // Did an invader bump into the side of the screen
         var bumped = false
 
         // Has the player lost
@@ -117,6 +152,18 @@ class SpaceInvadersView(context: Context, private val size: Point) : SurfaceView
                     bumped = true
 
                 }
+            }
+        }
+
+        // Update the players playerBullet if active
+        if (playerBullet.isActive) {
+            playerBullet.update(fps)
+        }
+
+        // Update all the invaders bullets if active
+        for (bullet in invadersBullets) {
+            if (bullet.isActive) {
+                bullet.update(fps)
             }
         }
 
@@ -167,6 +214,24 @@ class SpaceInvadersView(context: Context, private val size: Point) : SurfaceView
                 }
             }
 
+            // Draw the bricks if visible
+            for (brick in bricks) {
+                if (brick.isVisible) {
+                    canvas.drawRect(brick.position, paint)
+                }
+            }
+
+            // Draw the players playerBullet if active
+            if (playerBullet.isActive) {
+                canvas.drawRect(playerBullet.position, paint)
+            }
+
+            // Draw the invaders bullets
+            for (bullet in invadersBullets) {
+                if (bullet.isActive) {
+                    canvas.drawRect(bullet.position, paint)
+                }
+            }
 
             // Draw the score and remaining lives
             // Change the brush color
