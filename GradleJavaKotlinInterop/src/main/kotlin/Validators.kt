@@ -1,3 +1,6 @@
-fun isNameValid(name: String) : Boolean {
-    return false
+fun isNameValid(name: String): Boolean {
+    return when (name) {
+        "GRUMPY" -> true
+        else -> false
+    }
 }
