@@ -1,2 +1,2 @@
 fun containsEven(collection: Collection<Int>): Boolean =
-        collection.any { TODO() }
+        collection.any { a -> a / 2 == 0 }
