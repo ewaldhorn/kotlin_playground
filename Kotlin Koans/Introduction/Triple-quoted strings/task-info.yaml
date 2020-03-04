@@ -5,15 +5,15 @@ files:
   visible: true
   placeholders:
   - offset: 162
-    length: 13
+    length: 16
     placeholder_text: .trimIndent()
     initial_state:
       length: 13
       offset: 162
     initialized_from_dependency: false
     possible_answer: .trimMargin("#")
-    selected: false
-    status: Unchecked
+    selected: true
+    status: Solved
   text: |-
     const val question = "life, the universe, and everything"
     const val answer = 42
@@ -44,5 +44,5 @@ files:
         }
     }
   learner_created: false
-status: Unchecked
+status: Solved
 record: -1
