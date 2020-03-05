@@ -10,4 +10,12 @@ class DateTests {
         val actual = MyDate(1, 1, 1) == MyDate(1, 1, 1)
         assertEquals(expected, actual)
     }
+
+    @Test
+    fun `test that one date is not equal to another`() {
+        val expected = false
+        val actual = MyDate(1, 1, 1) == MyDate(1, 1, 2)
+        assertEquals(expected, actual)
+
+    }
 }

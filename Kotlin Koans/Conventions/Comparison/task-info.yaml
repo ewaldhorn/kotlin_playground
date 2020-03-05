@@ -18,7 +18,7 @@ files:
               else -> dayOfMonth - other.dayOfMonth
           }
     selected: false
-    status: Unchecked
+    status: Solved
   text: |
     data class MyDate(val year: Int, val month: Int, val dayOfMonth: Int) : Comparable<MyDate> {
         /* TODO */
@@ -53,5 +53,5 @@ files:
         }
     }
   learner_created: false
-status: Unchecked
+status: Solved
 record: -1
