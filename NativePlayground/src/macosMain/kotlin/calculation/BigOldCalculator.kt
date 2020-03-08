@@ -1,5 +1,0 @@
-package calculation
-
-class BigOldCalculator {
-
-}
