@@ -10,11 +10,13 @@ import androidx.ui.graphics.Color
 import androidx.ui.layout.Column
 import androidx.ui.layout.LayoutAlign
 import androidx.ui.layout.LayoutPadding
+import androidx.ui.material.Button
 import androidx.ui.material.Divider
 import androidx.ui.material.MaterialTheme
 import androidx.ui.material.Surface
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.unit.dp
+import za.co.nofuss.posing.models.CounterState
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,12 +39,17 @@ fun MyApp(children: @Composable() () -> Unit) {
 }
 
 @Composable
-fun MyScreenContent(names: List<String> = listOf("Android", "Again")) {
+fun MyScreenContent(
+    names: List<String> = listOf("Android", "Again"),
+    counterState: CounterState = CounterState()
+) {
     Column {
         for (name in names) {
             Greeting(name = name)
             Divider(color = Color.Black)
         }
+        Divider(color = Color.Transparent, height = 32.dp)
+        Counter(state = counterState)
     }
 }
 
@@ -52,6 +59,13 @@ fun Greeting(name: String) {
         text = "Hello $name!",
         modifier = LayoutPadding(24.dp) + LayoutAlign.CenterHorizontally
     )
+}
+
+@Composable
+fun Counter(state: CounterState) {
+    Button(onClick = { state.count++ }) {
+        Text(text = "Button clicks: ${state.count}")
+    }
 }
 
 @Preview
