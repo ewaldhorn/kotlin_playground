@@ -19,7 +19,9 @@ import androidx.ui.material.MaterialTheme
 import androidx.ui.material.Surface
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.unit.dp
+import androidx.ui.unit.sp
 import za.co.nofuss.posing.models.CounterState
+import za.co.nofuss.posing.theme.MyAppTheme
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +36,7 @@ class MainActivity : AppCompatActivity() {
 
 @Composable
 fun MyApp(children: @Composable() () -> Unit) {
-    MaterialTheme {
+    MyAppTheme {
         Surface(color = Color.Gray, border = Border(1.dp, Color.Black)) {
             children()
         }
@@ -64,6 +66,7 @@ fun MyScreenContent(
 fun Greeting(name: String) {
     Text(
         text = "Hello $name!",
+        style = MaterialTheme.typography().h1.copy(fontSize = 30.sp),
         modifier = LayoutPadding(24.dp) + LayoutAlign.CenterHorizontally
     )
 }
