@@ -5,7 +5,7 @@ import androidx.ui.graphics.Color
 import androidx.ui.material.MaterialTheme
 import androidx.ui.material.lightColorPalette
 
-val green = Color(0xFF1EB980)
+val green = Color(0xFF1AB940)
 private val themeColors = lightColorPalette(
     primary = green,
     surface = Color.DarkGray,
