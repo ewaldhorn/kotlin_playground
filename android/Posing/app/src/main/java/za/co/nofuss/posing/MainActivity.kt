@@ -12,6 +12,7 @@ import androidx.ui.layout.LayoutAlign
 import androidx.ui.layout.LayoutHeight
 import androidx.ui.layout.LayoutPadding
 import androidx.ui.layout.LayoutWidth
+import androidx.ui.layout.Row
 import androidx.ui.material.Button
 import androidx.ui.material.Divider
 import androidx.ui.material.MaterialTheme
@@ -53,7 +54,9 @@ fun MyScreenContent(
             }
             Divider(color = Color.Transparent, height = 32.dp)
         }
-        Counter(state = counterState)
+        Row(modifier = LayoutWidth.Fill + LayoutAlign.CenterHorizontally) {
+            Counter(state = counterState)
+        }
     }
 }
 
@@ -67,13 +70,8 @@ fun Greeting(name: String) {
 
 @Composable
 fun Counter(state: CounterState) {
-    Surface(
-        modifier = LayoutAlign.CenterHorizontally + LayoutWidth.Fill + LayoutPadding(5.dp),
-        color = Color.Transparent
-    ) {
-        Button(onClick = { state.count++ }, modifier = LayoutAlign.CenterHorizontally) {
-            Text(text = "Button clicks: ${state.count}")
-        }
+    Button(onClick = { state.count++ }, modifier = LayoutPadding(bottom = 10.dp)) {
+        Text(text = "Button clicks: ${state.count}")
     }
 }
 
