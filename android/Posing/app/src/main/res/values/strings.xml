@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Posing</string>
+    <string name="title_activity_profile">My Compose App</string>
 </resources>

@@ -13,13 +13,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyApp {
-                MyScreenContent()
+                MyScreenContent(context = this)
             }
         }
     }
 }
 
-@Preview
+@Preview("My Standard Preview", widthDp = 350, heightDp = 750)
 @Composable
 fun DefaultPreview() {
     MyApp {
