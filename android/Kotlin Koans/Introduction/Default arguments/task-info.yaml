@@ -8,7 +8,7 @@ files:
     length: 69
     placeholder_text: 'fun foo(name: String, number: Int, toUpperCase: Boolean)'
     initial_state:
-      length: 56
+      length: 69
       offset: 0
     initialized_from_dependency: false
     possible_answer: 'fun foo(name: String, number: Int = 42, toUpperCase: Boolean

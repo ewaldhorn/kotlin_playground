@@ -8,7 +8,7 @@ files:
     length: 4
     placeholder_text: TODO()
     initial_state:
-      length: 6
+      length: 4
       offset: 22
     initialized_from_dependency: false
     possible_answer: '"OK"'
