@@ -1,5 +1,6 @@
 package components
 
+import externals.*
 import kotlinx.css.*
 import kotlinx.html.js.*
 import models.*
@@ -41,10 +42,8 @@ class VideoPlayer : RComponent<VideoPlayerProps, RState>() {
                     +"Mark as unwatched"
                 }
             }
-            img {
-                attrs {
-                    src = "https://via.placeholder.com/640x360.png?text=Video+Player+Placeholder"
-                }
+            ReactPlayer {
+                attrs.url = props.video.videoUrl
             }
         }
     }
