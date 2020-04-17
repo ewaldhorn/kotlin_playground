@@ -1,2 +1,2 @@
-rootProject.name = "ChromePlugin"
+rootProject.name = "chrome_plugin"
 
