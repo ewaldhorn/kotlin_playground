@@ -42,6 +42,27 @@ class VideoPlayer : RComponent<VideoPlayerProps, RState>() {
                     +"Mark as unwatched"
                 }
             }
+            styledDiv {
+                css {
+                    display = Display.flex
+                    marginBottom = 10.px
+                }
+                EmailShareButton {
+                    attrs.url = props.video.videoUrl
+                    EmailIcon {
+                        attrs.size = 32
+                        attrs.round = true
+                    }
+                }
+
+                TelegramShareButton {
+                    attrs.url = props.video.videoUrl
+                    TelegramIcon {
+                        attrs.size = 32
+                        attrs.round = true
+                    }
+                }
+            }
             ReactPlayer {
                 attrs.url = props.video.videoUrl
             }
