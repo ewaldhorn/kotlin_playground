@@ -1,9 +1,14 @@
-import models.*
-import react.dom.*
-import kotlin.browser.*
+package app
 
-fun main() {
-    render(document.getElementById("root")) {
+import components.*
+import kotlinx.css.*
+import models.*
+import react.*
+import react.dom.*
+import styled.*
+
+class App : RComponent<RProps, RState>() {
+    override fun RBuilder.render() {
         h1 {
             +"Kotlin and React"
         }
@@ -11,21 +16,18 @@ fun main() {
             h3 {
                 +"Videos to Watch"
             }
-            for (video in unwatchedVideos) {
-                p {
-                    +"${video.speaker}: ${video.title}"
-                }
-            }
+            child(VideoList::class) { attrs.videos = unwatchedVideos }
             h3 {
                 +"Videos watched"
             }
-            for (video in watchedVideos) {
-                p {
-                    +"${video.speaker}: ${video.title}"
-                }
-            }
+            child(VideoList::class) { attrs.videos = watchedVideos }
         }
-        div {
+        styledDiv {
+            css {
+                position = Position.absolute
+                top = 10.px
+                right = 10.px
+            }
             h3 {
                 +"John Doe: Building and breaking things"
             }
