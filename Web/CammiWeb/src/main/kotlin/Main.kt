@@ -1,3 +1,4 @@
+import org.khronos.webgl.*
 import org.w3c.dom.*
 import org.w3c.dom.mediacapture.*
 import kotlin.browser.*
@@ -14,8 +15,10 @@ class RollIt {
     val strip = document.querySelector(".strip") as HTMLDivElement
 
     // val snap = document.querySelector(".snap") as HTMLAudioElement
-    val btn = document.getElementById("playVideo") as HTMLButtonElement
+    val mirrorButton = document.getElementById("mirrorButton") as HTMLButtonElement
     val photoButton = document.getElementById("photoButton") as HTMLButtonElement
+
+    var isMirroring = false
 
     fun getVideo() {
         window.navigator.mediaDevices.getUserMedia(constraints = MediaStreamConstraints(video = true, audio = false))
@@ -23,7 +26,7 @@ class RollIt {
                 video.srcObject = lms
                 video.crossOrigin = "anonymous"
 
-                btn.addEventListener("click", { video.play() })
+                mirrorButton.addEventListener("click", { isMirroring = !isMirroring })
                 photoButton.addEventListener("click", { takePhoto() })
 
                 video.play()
@@ -40,7 +43,24 @@ class RollIt {
         canvas.width = width
         canvas.height = height
 
-        window.setInterval({ ctx.drawImage(video, 0.0, 0.0, 640.0, 480.0) }, 100)
+        window.setInterval({
+            // ctx.setTransform(-1.0, 0.0, 0.0, 1.0, 0.0, 0.0);
+            ctx.drawImage(video, 0.0, 0.0, 640.0, 480.0)
+            var pixels = ctx.getImageData(0.0, 0.0, 640.0, 480.0)
+            pixels = rgbSplit(pixels)
+            ctx.putImageData(pixels, 0.0, 0.0)
+            // ctx.setTransform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0);
+        }, 100)
+    }
+
+    private fun rgbSplit(im: ImageData): ImageData {
+        for (i in 0 until im.data.length step 4) {
+            im.data[i - 150] = im.data[i + 0]
+            im.data[i + 500] = im.data[i + 1]
+            im.data[i - 550] = im.data[i + 2]
+        }
+
+        return im
     }
 
     private fun takePhoto() {
