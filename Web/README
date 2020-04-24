@@ -1,0 +1,5 @@
+Kotlin experiments aimed at the web.
+
+CammiWeb uses KotlinJS to access the webcam.
+chrome_plugin is something I experimented with at some stage, I need to push some changes.
+kotlin_web_app is a web app in Kotlin, no jokes.
