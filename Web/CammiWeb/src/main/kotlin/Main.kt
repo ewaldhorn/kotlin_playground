@@ -63,6 +63,11 @@ class RollIt {
         return im
     }
 
+    private fun greenScreen(im: ImageData): ImageData {
+
+        return im;
+    }
+
     private fun takePhoto() {
         val data = canvas.toDataURL("image/jpeg")
         val link = document.createElement("a") as HTMLAnchorElement

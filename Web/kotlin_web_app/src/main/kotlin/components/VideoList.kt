@@ -5,7 +5,7 @@ import models.*
 import react.*
 import react.dom.*
 
-class VideoList: RComponent<VideoListProps, RState>() {
+class VideoList : RComponent<VideoListProps, RState>() {
     override fun RBuilder.render() {
         for (video in props.videos) {
             p {
@@ -26,7 +26,7 @@ class VideoList: RComponent<VideoListProps, RState>() {
     }
 }
 
-external interface VideoListProps: RProps {
+external interface VideoListProps : RProps {
     var videos: List<Video>
     var selectedVideo: Video?
     var onSelectVideo: (Video) -> Unit
