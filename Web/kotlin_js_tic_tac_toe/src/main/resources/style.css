@@ -1,0 +1,18 @@
+.board {
+    border: 5px solid darkblue;
+    border-radius: 10px;
+    width: 500px;
+    height: 500px;
+    margin: 0 auto;
+    display: grid;
+    grid-template: repeat(3, 1fr) / repeat (3, 1fr);
+}
+
+.square-button {
+    background: lightblue;
+    border: 5px solid darkblue;
+    fontSize: 50px;
+    fontWeight: 800;
+    cursor: pointer;
+    outline: none;
+}
