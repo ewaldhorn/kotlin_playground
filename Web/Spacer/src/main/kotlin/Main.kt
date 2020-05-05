@@ -1,6 +1,7 @@
 import org.w3c.dom.*
 import org.w3c.dom.events.*
 import kotlin.browser.*
+import kotlin.random.*
 
 val canvas = document.getElementById("game") as HTMLCanvasElement
 val context = canvas.getContext("2d") as CanvasRenderingContext2D
@@ -16,12 +17,12 @@ fun main() {
 }
 
 fun setupEventHandlers() {
-    document.addEventListener("keydown", {e -> handleKeyInput(e as KeyboardEvent)})
-    document.addEventListener("keyup", {e -> handleKeyInput(e as KeyboardEvent)})
+    document.addEventListener("keydown", { e -> handleKeyInput(e as KeyboardEvent) })
+    document.addEventListener("keyup", { e -> handleKeyInput(e as KeyboardEvent) })
 }
 
 class SpaceShip(val size: SpaceShipSize, var position: SpaceShipPosition) {
-    var color : String = "white"
+    var color: String = "white"
     var angle = 0.0
     var engineOn = false
     var rotatingLeft = false
@@ -29,24 +30,45 @@ class SpaceShip(val size: SpaceShipSize, var position: SpaceShipPosition) {
     var velocity = Velocity()
 
     fun draw() {
-        val triangleCenterX  = position.x + 0.5  * size.width
+        val triangleCenterX = position.x + 0.5 * size.width
         val triangleCenterY = position.y + 0.5 * size.height
 
         context.save()
 
-        context.translate(triangleCenterX, triangleCenterY)
-        context.rotate(angle)
-        context.lineWidth = 1.0
-        context.beginPath()
+        // draw ship
+        with(context) {
+            translate(triangleCenterX, triangleCenterY)
+            rotate(angle)
+            lineWidth = 1.0
+            beginPath()
 
-        context.moveTo(0.0, -size.height / 2)
-        context.lineTo(-size.width / 2, size.height / 2)
-        context.lineTo(size.width / 2, size.height / 2)
+            moveTo(0.0, -size.height / 2)
+            lineTo(-size.width / 2, size.height / 2)
+            lineTo(size.width / 2, size.height / 2)
 
-        context.closePath()
+            closePath()
 
-        context.strokeStyle = color
-        context.stroke()
+            strokeStyle = color
+            stroke()
+        }
+
+        // draw afterburner
+        if (engineOn) {
+            val fireYPos = size.height / 2 + 5;
+            val fireXPos = size.width * 0.25;
+
+            with(context) {
+                beginPath()
+                moveTo(-fireXPos, fireYPos)
+                lineTo(fireXPos, fireYPos)
+                lineTo(0.0, fireYPos + Random.nextDouble() * 50)
+                lineTo(-fireXPos, fireYPos)
+                closePath()
+
+                fillStyle = "orange"
+                fill()
+            }
+        }
 
         context.restore()
     }
@@ -57,6 +79,11 @@ class SpaceShip(val size: SpaceShipSize, var position: SpaceShipPosition) {
         position.x += velocity.x
         position.y += velocity.y
 
+        // wrap-around
+        position.x = (canvas.width + position.x) % canvas.width
+        position.y = (canvas.height + position.y) % canvas.height
+
+        // rotation
         if (spaceShip.rotatingLeft) {
             angle -= degToRad
         }
@@ -65,13 +92,13 @@ class SpaceShip(val size: SpaceShipSize, var position: SpaceShipPosition) {
             angle += degToRad
         }
 
+        // acceleration
         if (spaceShip.engineOn) {
             velocity.x += (thrust / 100) * kotlin.math.sin(angle)
             velocity.y -= (thrust / 100) * kotlin.math.cos(angle)
         }
 
         velocity.y += gravity / 100
-
     }
 }
 
