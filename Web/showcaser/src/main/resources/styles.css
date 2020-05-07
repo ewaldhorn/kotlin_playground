@@ -1,0 +1,18 @@
+html {
+  box-sizing: border-box;
+  font-size: 15px;
+  background: #f7f6f4;
+}
+
+.approot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.centerme {
+    display: flex;
+    justify-content: center;
+}
+
