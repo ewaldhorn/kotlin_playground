@@ -2,10 +2,38 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NoFuss Kotlin JS CSS Animation Sample</title>
     <link rel="stylesheet" href="css_animation_sample.css">
 </head>
 <body>
-    <a href="/">Home</a>
+    <a href="/">Return Home</a>
+    <hr>
+    <p>
+        <h3>Simple page-load animation.</h3>
+    </p>
+    <p>
+        The data below will load eventually.  Just wait for it...
+    </p>
+    <div>
+        <p id="p1" class="loading">The idea is to show page content loading, slowly, as it's being retrieved from the server.</p>
+        <ul>
+            Available options
+            <li id="l1" class="loading">Item 1</li>
+            <li id="l2" class="loading">Item 2</li>
+            <li id="l3" class="loading">Item 3</li>
+            <li id="l4" class="loading">Item 4</li>
+            <li id="l5" class="loading">Item 5</li>
+            <li id="l6" class="loading">Item 6</li>
+            <li id="l7" class="loading">Item 7</li>
+            <li id="l8" class="loading">Item 8</li>
+            <li id="l9" class="loading">Item 9</li>
+            <li id="l10" class="loading">Item 10</li>
+        </ul>
+    </div>
+    <script type="text/javascript" src="/showcaser.js"></script>
+    <script type="text/javascript">
+        showcaser.animations.startCSSAnimationSample()
+    </script>
 </body>
 </html>
