@@ -1,14 +1,19 @@
 html {
-  box-sizing: border-box;
-  font-size: 15px;
-  background: #f7f6f4;
+    box-sizing: border-box;
+    font-size: 18px;
+    background: #f7f6f4;
+}
+
+body {
+    max-width: 960px;
+    margin: auto;
 }
 
 .approot {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .centerme {
@@ -19,6 +24,7 @@ html {
 .indexnav {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
 }
 
 .indexnav a {
@@ -27,12 +33,71 @@ html {
     padding: 15px 25px;
     text-align: center;
     background-color: rgb(189, 185, 185);
-    color:#464141;
-    margin:0;
-    font-family:sans-serif;
+    color: #464141;
+    margin: 0;
+    font-family: sans-serif;
 }
 
 .indexnav a:hover {
     background-color: #777777;
-    color:#ffffff;
+    color: #ffffff;
+}
+
+.indexnav ul ul {
+    display: none;
+}
+
+.indexnav ul li:hover>ul {
+    display: block;
+}
+
+.indexnav ul:after {
+    content: "";
+    clear: both;
+    display: block;
+}
+
+.indexnav ul li {
+    float: left;
+    position: relative;
+    list-style-type: none;
+}
+
+.indexnav ul li:hover {
+    background: rgba(220, 220, 230, 0.67);
+}
+
+.indexnav ul li:hover a {
+    color: #fff;
+}
+
+.indexnav ul li a {
+    display: block;
+    padding: 20px 30px;
+    color: #ffffff;
+    text-decoration: none;
+    background-color: rgba(151, 140, 143, 0.8);
+    font-family: sans-serif;
+}
+
+.indexnav ul ul {
+    background: #5f6975;
+    padding: 0;
+    position: absolute;
+    top: 100%;
+}
+
+.indexnav ul ul li {
+    float: none;
+    position: relative;
+}
+
+.indexnav ul ul li a {
+    padding: 15px 10px;
+    color: #ffffff;
+    text-transform: uppercase;
+}
+
+.indexnav ul ul li a:hover {
+    background: rgba(151, 140, 143, 0.67);
 }
