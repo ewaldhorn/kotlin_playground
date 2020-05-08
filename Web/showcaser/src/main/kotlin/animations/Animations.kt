@@ -8,9 +8,9 @@ import kotlin.dom.*
 fun startCSSAnimationSample() {
     clearLoadingForElement(document.getElementById("p1"), 2000)
 
-    for (i in 1..10) {
+    for (i in 1..18) {
         clearLoadingForElement(document.getElementById("l$i"),
-            2250 + kotlin.random.Random.nextInt(4000))
+            2250 + kotlin.random.Random.nextInt(5000))
     }
 }
 
