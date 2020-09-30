@@ -36,6 +36,7 @@ body {
     color: #464141;
     margin: 0;
     font-family: sans-serif;
+    font-size: 16px;
 }
 
 .indexnav a:hover {
@@ -95,7 +96,6 @@ body {
 .indexnav ul ul li a {
     padding: 15px 10px;
     color: #ffffff;
-    text-transform: uppercase;
 }
 
 .indexnav ul ul li a:hover {

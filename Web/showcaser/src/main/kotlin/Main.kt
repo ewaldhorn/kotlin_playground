@@ -2,7 +2,6 @@ import constants.*
 import kotlin.browser.*
 
 fun main() {
-    console.log("Hello from Kotlin")
     updateTitleWithAppVersion()
 }
 
