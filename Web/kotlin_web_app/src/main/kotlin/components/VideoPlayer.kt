@@ -28,17 +28,16 @@ class VideoPlayer : RComponent<VideoPlayerProps, RState>() {
             styledButton {
                 css {
                     display = Display.block
-                    backgroundColor = if(props.unwatchedVideo) Color.lightGreen else Color.red
+                    backgroundColor = if (props.unwatchedVideo) Color.lightGreen else Color.red
                 }
                 attrs {
                     onClickFunction = {
                         props.onWatchedButtonPressed(props.video)
                     }
                 }
-                if(props.unwatchedVideo) {
+                if (props.unwatchedVideo) {
                     +"Mark as watched"
-                }
-                else {
+                } else {
                     +"Mark as unwatched"
                 }
             }
